@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/colors.dart';
+import '../services/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final authService = AuthService();
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -28,6 +31,12 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: AppColors.secondary),
             onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout_outlined, color: AppColors.secondary),
+            onPressed: () async {
+              await authService.signOut();
+            },
           ),
         ],
       ),
