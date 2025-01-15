@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "266321909201",
+    "project_id": "luxe-immo-28acd",
+    "storage_bucket": "luxe-immo-28acd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266321909201:android:f48afba5cd6c758cd83cf0",
+        "android_client_info": {
+          "package_name": "com.example.luxe_estate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc5Vs0YS777U3rVHOnEjjqOm4-4XLfY78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266321909201-mgqf9iak3m90ihovg62956gl1hd22vl7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.luxeEstate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266321909201:android:ee672b35075ad513d83cf0",
+        "android_client_info": {
+          "package_name": "com.example.sidnapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc5Vs0YS777U3rVHOnEjjqOm4-4XLfY78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266321909201-mgqf9iak3m90ihovg62956gl1hd22vl7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.luxeEstate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266321909201:android:f288edebd3545df2d83cf0",
+        "android_client_info": {
+          "package_name": "luxe.immo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266321909201-2u7dfu5q3io926rk2u3f5tl9gnfttjk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "luxe.immo",
+            "certificate_hash": "231baf682647bb28b379039821a27445777c6c68"
+          }
+        },
+        {
+          "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc5Vs0YS777U3rVHOnEjjqOm4-4XLfY78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266321909201-lc1hj6ns63eeq91va5u5onl1tjsj945s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266321909201-mgqf9iak3m90ihovg62956gl1hd22vl7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.luxeEstate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
