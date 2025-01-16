@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/colors.dart';
 import '../services/auth_service.dart';
+import '../services/property_service.dart';
+import '../models/property.dart';
+import 'add_property_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final authService = AuthService();
+  final propertyService = PropertyService();
+  String _selectedCategory = 'All';
+
+  @override
   Widget build(BuildContext context) {
-    final authService = AuthService();
-    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -40,6 +50,16 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddPropertyScreen()),
+          );
+        },
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -68,21 +88,55 @@ class HomeScreen extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildCategoryChip('All', true),
-                    _buildCategoryChip('Villa', false),
-                    _buildCategoryChip('Apartment', false),
-                    _buildCategoryChip('Penthouse', false),
+                    _buildCategoryChip('All', _selectedCategory == 'All'),
+                    _buildCategoryChip('Villa', _selectedCategory == 'villa'),
+                    _buildCategoryChip('Apartment', _selectedCategory == 'apartment'),
+                    _buildCategoryChip('Penthouse', _selectedCategory == 'penthouse'),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              // Featured Properties
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return _buildPropertyCard();
+              // Properties Stream
+              StreamBuilder<List<Property>>(
+                stream: _selectedCategory == 'All'
+                    ? propertyService.getProperties()
+                    : propertyService.getPropertiesByType(_selectedCategory.toLowerCase()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  final properties = snapshot.data ?? [];
+
+                  if (properties.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No properties found',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: properties.length,
+                    itemBuilder: (context, index) {
+                      final property = properties[index];
+                      return _buildPropertyCard(property);
+                    },
+                  );
                 },
               ),
             ],
@@ -106,22 +160,29 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryChip(String label, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: Chip(
-        label: Text(
-          label,
-          style: GoogleFonts.poppins(
-            color: isSelected ? AppColors.textLight : AppColors.textDark,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCategory = label;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        child: Chip(
+          label: Text(
+            label,
+            style: GoogleFonts.poppins(
+              color: isSelected ? AppColors.textLight : AppColors.textDark,
+            ),
           ),
+          backgroundColor: isSelected ? AppColors.primary : AppColors.lightGrey,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
-        backgroundColor: isSelected ? AppColors.primary : AppColors.lightGrey,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
       ),
     );
   }
 
-  Widget _buildPropertyCard() {
+  Widget _buildPropertyCard(Property property) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -138,18 +199,24 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-              color: AppColors.lightGrey,
-            ),
-            child: Center(
-              child: Icon(
-                Icons.home,
-                size: 48,
-                color: AppColors.grey.withOpacity(0.5),
-              ),
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: Image.network(
+              property.imageUrl,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 200,
+                  color: AppColors.lightGrey,
+                  child: Icon(
+                    Icons.home,
+                    size: 48,
+                    color: AppColors.grey.withOpacity(0.5),
+                  ),
+                );
+              },
             ),
           ),
           Padding(
@@ -158,7 +225,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Luxury Villa in Beverly Hills',
+                  property.title,
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -167,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Beverly Hills, Los Angeles',
+                  property.location,
                   style: GoogleFonts.poppins(
                     color: AppColors.grey,
                   ),
@@ -176,7 +243,7 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '\$5,900,000',
+                      '\$${property.price.toStringAsFixed(0)}',
                       style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -186,9 +253,9 @@ class HomeScreen extends StatelessWidget {
                     const Spacer(),
                     Row(
                       children: [
-                        _buildFeatureChip('5 beds'),
+                        _buildFeatureChip('${property.bedrooms} beds'),
                         const SizedBox(width: 8),
-                        _buildFeatureChip('6 baths'),
+                        _buildFeatureChip('${property.bathrooms} baths'),
                       ],
                     ),
                   ],
